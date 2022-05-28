@@ -1,0 +1,131 @@
+Pre-requisites:
+- Linux server (we have tested this on RHEL 7 and Ubuntu)
+- python 3 (ideally the same version as used on Jenkins slave in full CDD)
+- local user account to own the installation (we have tested with user ansible, group automation)
+
+Additional packages for python (matching Jenkins slave setup) are included 
+in the installation .zip files and they should be sufficient for modern  RHEL or Ubuntu distributions.
+
+
+
+
+1) Config Service
+
+There are two options:
+- use an existing Config Service from full CDD installation (suitable for testing in E/// lab)
+- set up a simple Config Service on the DDS machine running CDD Lite (suitable for customer installations)
+
+Steps to set up a simple CS on DDS below:
+
+# deploying config service as user ansible:
+sudo mkdir -p /data/swdp
+sudo chown ansible:automation /data/swdp
+mkdir /data/swdp/cs
+# upload and unzip the content of cs.zip into /data/swdp/cs
+cd /data/swdp/cs
+chmod u+x bin/cdd-cs.sh
+chmod u+x bin/lib/common.sh
+python3  -m venv --system-site-packages .venv_swdp_prod
+source .venv_swdp_prod/bin/activate
+pip install --upgrade pip --no-index --find-links ./packages
+pip install -r ./requirements.txt --no-index --find-links ./packages
+exit
+
+# starting config service:
+/data/swdp/cs/bin/cdd-cs.sh start
+
+# logs
+less /data/swdp/cs/log/cdd-cs-daemon.log
+
+# testing
+curl http://127.0.0.1:5000/swdpconfig/testConfig
+
+# stopping config service:
+/data/swdp/cs/bin/cdd-cs.sh stop
+
+
+
+2) CDD Lite
+
+# temp directory:
+sudo mkdir -p /data/downloads/l2_tmp
+sudo chown -R ansible:automation /data/downloads
+
+# working directory:
+mkdir -p /data/swdp/epg-lite
+
+# upload and unzip epg-lite_*.zip package to the directory above
+
+
+3) Storage Server
+
+# backup directory:
+mkdir -p /data/swdp/epg/backup
+
+
+4) CAS-C (or local DDS storage)
+
+# create a local emulation of CAS-C:
+sudo mkdir -p /data/Store/Deliverables
+sudo chown -R ansible:automation /data/Store
+# upload all SWGW packages with EPG software there, including the "from" and "to" versions of software
+# upload PSP packages:
+# CXP9039313_1-R29A.zip
+# CXP9039314_1-R29A.zip
+# upload release notes:
+# AXB25012_32-R12A.zip
+
+5) Create 2 Config files:
+# a) CDD config should be placed in CS directory /data/swdp/cs/src/main and by default called swdp_templateConfigData.ini
+
+# b) Ansible config is in /data/swdp/epg-lite/inventories. To save effort, re-use from an existing environment and make adjustments.
+
+6) Onboarding of new versions of EPG
+# for each version create a config file and place in /data/swdp/epg-lite/playbooks/vars
+
+7) Backup:
+# Place the deployment CXP package of the currently used EPG software version in the backup folder: /data/swdp/epg/backup
+
+8) Convenience:
+ln -s /data/swdp/cs/src/main/swdp_templateConfigData.ini cdd_config
+
+9) upload the "cdd" command line utility to a location that is on path, e.g. ~/bin
+mkdir ~/bin
+cp /data/swdp/epg-lite/bin/cdd ~/bin/
+chmod u+x ~/bin/cdd
+
+10) Testing:
+# start the Config Service:
+/data/swdp/cs/bin/cdd-cs.sh start
+
+# verify the configuration:
+curl http://127.0.0.1:5000/swdpconfig/swdp_templateConfigData
+
+# run the first few steps:
+# replace "XXX" with your EPG name, corresponding to a section in the config file [EPG_XXX]
+cdd init XXX
+
+# check installed packages:
+cd /data/epg3_home
+source .venv_swdp_prod/bin/activate
+pip list
+
+# stop the Config Service:
+/data/swdp/cs/bin/cdd-cs.sh stop
+
+
+9) Real upgrade:
+# start the Config Service:
+/data/swdp/cs/bin/cdd-cs.sh start
+
+# perform the upgrade:
+# replace "XXX" with your EPG name, corresponding to a section in the config file [EPG_XXX]
+cdd init XXX
+cdd prepare XXX
+cdd upgrade XXX
+
+# rollback, if needed
+cdd rollback XXX
+
+# stop the Config Service:
+/data/swdp/cs/bin/cdd-cs.sh stop

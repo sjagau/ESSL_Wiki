@@ -1,0 +1,2 @@
+Understanding Linux /etc/shadow File Format
+https://www.2daygeek.com/understanding-linux-etc-shadow-file-format/#:~:text=The%20%2Fetc%2Fshadow%20file%20stores,less%20of%20a%20security%20risk.

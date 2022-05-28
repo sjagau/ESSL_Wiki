@@ -1,0 +1,41 @@
+0) install Ubuntu
+1) configure so that machine will not shut down:
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+2) change IP address
+https://linuxhint.com/install_netplan_ubuntu/
+https://gist.github.com/johnf/7777e798cbb33a7c50ddf6506dc44c96
+3) adjust /etc/hosts
+<see notes>
+configure crontab
+4) install 'NFS':
+nfs-common, cifs-utils
+5) install 'Docker':
+6) swapoff -a
+7) configure Ubuntu bridging
+8) install 'Kubernetes'
+8a) Master: 'kubeadm init
+8b) Worker: 'kubeadm join
+9) configure 'crontab'
+
+
+apk
+apt / apt-get
+snap
+
+Cron-Jobs
+re-create credentials via cron-job
+
+Monitoring
+exclusive work-space
+Ingress / Prometheus / Grafana 
+
+
+c16080100.ss2k.uci.edu   128.200.135.194
+c16080101.ss2k.uci.edu   128.200.135.195
+c16080102.ss2k.uci.edu   128.200.135.196
+c11100502.ss2k.uci.edu   128.200.135.197
+c13031900.ss2k.uci.edu   128.200.135.198
+
+Tools:
+mudd -- for E-mail notifications
+

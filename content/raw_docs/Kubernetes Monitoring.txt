@@ -1,0 +1,48 @@
+nginx-ingress
+https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal  (no isses)
+
+Usage for 'Host Based Routing'
+https://kubernetes.github.io/ingress-nginx/user-guide/basic-usage/
+
+Metal-LB Installation
+https://metallb.universe.tf/installation/
+Metal-LB Layer-2 Configuration
+Virtual K8s Cluster: 192.168.1.240-192.168.1.250 (pod-network-cidr)
+
+Prometheus Installation
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+
+
+KUBERNETES DASHBOARD INSTALLATION
+-------------------------------------------------------
+official pages:
+https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
+https://github.com/kubernetes/dashboard
+
+largely follow:
+https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard
+with fixed link also consider:
+https://www.replex.io/blog/how-to-install-access-and-add-heapster-metrics-to-the-kubernetes-dashboard
+
+try with 'NodePort' instead of 'ClusterIP'
+for access with 'ClusterIP' consider:
+https://stackoverflow.com/questions/41663504/how-to-access-services-through-kubernetes-cluster-ip
+
+open issue: >>generate access token<< ('Create Sample User' page)
+create advanced '.kube/config' (https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+
+
+/(\s*\"image\":.*otree-)(.*)/$1v4.4",/
+
+'        image: sjagau/essl-lab:otree-v5.2'
+
+
+
+
+
+
+
+
+
