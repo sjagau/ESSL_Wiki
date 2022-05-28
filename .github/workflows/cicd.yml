@@ -16,7 +16,7 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: sjagau/essl-wiki
-  IMAGE_TAG: 1.0.0
+  IMAGE_TAG: 1.0.1
 
 jobs:
   push_to_registry:
