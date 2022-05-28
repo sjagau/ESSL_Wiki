@@ -2,9 +2,21 @@
 
 name: Publish Docker image
 # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
-on: [push]
+on:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - 'master'
 # release:
 #   types: [published]
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: sjagau/essl-wiki
+  IMAGE_TAG: 1.0.0
 
 jobs:
   push_to_registry:
@@ -13,21 +25,22 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.IMAGE_TAG }}
+            
       - name: Log in to Docker Hub
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: sjagau/essl-wiki
-      
       - name: Build and push Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        uses: docker/build-push-action@v3
         with:
           context: .
           push: true
