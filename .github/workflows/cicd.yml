@@ -5,12 +5,12 @@ name: Publish Docker image
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
     tags:
       - 'v*'
   pull_request:
     branches:
-      - 'master'
+      - 'main'
 # release:
 #   types: [published]
 env:
